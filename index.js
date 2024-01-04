@@ -61,12 +61,5 @@ async function GetAuthRequest(req,res) {
              
     requestMap.set(`${sessionId}`, request);
 
-    const jsonString = JSON.stringify(request)
-
-    const base64Request = Buffer.from(jsonString).toString('base64')
-
-    const encodedRequest = encodeURIComponent(base64Request);
-    const deepLink = `http://auth?request=${encodedRequest}`;
-
-    return deepLink
+    return res.status(200).set('Content-Type', 'applicattion/json').send(request)
 }
