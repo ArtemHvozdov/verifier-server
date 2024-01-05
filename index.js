@@ -1,25 +1,23 @@
 const express = require('express');
-const {auth, resolver, protocol} = require('@iden3/js-iden3-auth')
-const getRawBody = require('raw-body')
+const {auth, resolver, protocol} = require('@iden3/js-iden3-auth');
+const getRawBody = require('raw-body');
 
 const app = express();
 const port = 8080;
-
+    
 app.get("/api/sign-in", async (req, res) => {
-    console.log('get Auth Request');
-    const deepLink = await GetAuthRequest(req, res)
-    res.json({ deepLink })
-});
-
+        console.log('get Auth Request');
+        GetAuthRequest(req,res)
+    }
+);
+    
 app.post("/api/callback", (req, res) => {
     console.log('callback');
-    Callback(req,res);
-});
-
-app.listen(port, () => {
-    console.log('server running on port 8080');
-});
-
+    Callback(req,res)});app.listen(port, () => {
+        console.log('server running on port 8080')
+    }
+);
+        
 const requestMap = new Map();
 
 async function GetAuthRequest(req,res) {
@@ -36,7 +34,7 @@ async function GetAuthRequest(req,res) {
         audience,
         uri,
     );
-            
+                    
     request.id = '7f38a193-0918-4a48-9fac-36adfdb8b542';
     request.thid = '7f38a193-0918-4a48-9fac-36adfdb8b542';
 
@@ -45,21 +43,22 @@ async function GetAuthRequest(req,res) {
         id: 1,
         circuitId: 'credentialAtomicQuerySigV2',
         query: {
-          allowedIssuers: ['*'],
-          type: 'KYCAgeCredential',
-          context: 'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld',
-          credentialSubject: {
+            allowedIssuers: ['*'],
+            type: 'KYCAgeCredential',
+            context: 'https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld',
+            credentialSubject: {
             birthday: {
-              $lt: 20000101,
+                $lt: 20000101,
             },
-          },
-      },
+            },
+        },
     };
 
     const scope = request.body.scope ?? [];
     request.body.scope = [...scope, proofRequest];
-             
+                    
     requestMap.set(`${sessionId}`, request);
 
-    return res.status(200).set('Content-Type', 'applicattion/json').send(request)
+    return res.status(200).set('Content-Type', 'application/json').send(request);  
+            
 }
